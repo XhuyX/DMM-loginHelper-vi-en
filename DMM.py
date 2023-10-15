@@ -1,5 +1,6 @@
 import sys,os
 from PyQt5.QtWidgets import QApplication, QWidget, QLabel, QLineEdit, QPushButton, QVBoxLayout,QDesktopWidget,QMessageBox,QComboBox,QHBoxLayout
+from PyQt5.QtGui import QIcon
 from PyQt5.QtCore import QCoreApplication
 import re
 import json
@@ -7,19 +8,29 @@ import requests
 from urllib.parse import quote_plus 
 import functools
 import webbrowser
+from qt_material import apply_stylesheet
+
 
 
 class User_Setting():
     def __init__(self) -> None:
         user_setting_file =  open("setting.json",'r',encoding='utf8') 
-        user_setting = json.load(user_setting_file)
+        self.user_setting = json.load(user_setting_file)
         user_setting_file.close()
-        self.proxies_port = user_setting['代理端口']
-        self.game_list=user_setting['游戏列表']
+        self.proxies_port = self.user_setting['代理端口']
+        self.game_list = self.user_setting['游戏列表']
+        self.first = True if self.user_setting.get('首次启动') == '是' else False
 
         account_file =  open("account.json",'r',encoding='utf8')
         self.account = json.load(account_file) 
         account_file.close()
+    
+    def updata(self):
+        self.user_setting['首次启动'] = '否'  
+
+        with open("setting.json", 'w', encoding='utf8') as user_setting_file:
+            json.dump(self.user_setting, user_setting_file, ensure_ascii=False, indent=4)  # 将数据写回文件
+
 
 class DMMGame:
     
@@ -159,8 +170,19 @@ class MainWindow(QWidget):
         
 
     def initUI(self):
-        self.setWindowTitle('114514')
-        self.setGeometry(100, 100, 600, 300)
+        if self.setting.first:
+            QMessageBox.warning(self, '警告',
+                                '''
+为了你的账号安全，如果不确信该软件的来源是否可靠
+        请到github下载源代码自行编译
+https://github.com/Lisanjin/DMM-loginhelper
+使用记事本打开account.json和setting.json配置后使用
+                                '''
+                                )
+            self.setting.updata()
+
+        self.setWindowTitle('神绊！启动！')
+        self.setGeometry(100, 100, 450, 200)
 
         main_layout = QHBoxLayout()
         left_layout = QVBoxLayout()
@@ -188,12 +210,10 @@ class MainWindow(QWidget):
         
         self.start_button = QPushButton('启动')
         
-        
-
 
         self.start_button.clicked.connect(functools.partial(self.game_start))
         # 设置按钮的宽度和高度
-        self.start_button.setFixedSize(100, 30)  # 100 像素宽，30 像素高
+        self.start_button.setFixedSize(100, 30)
 
         
         main_layout.addWidget(self.start_button)
@@ -207,6 +227,9 @@ class MainWindow(QWidget):
         x = (screen_geometry.width() - self.width()) // 2
         y = (screen_geometry.height() - self.height()) // 2
         self.move(x, y)
+
+    def message(self):
+        pass
 
     def game_start(self):
         self.start_button.setText('启动中')
@@ -236,19 +259,16 @@ class MainWindow(QWidget):
 
 
 if __name__ == '__main__':
-    print("为了你的账号安全，如果你不确信该软件的来源是否可靠，请到github下载源代码自行编译")
-    print("https://github.com/Lisanjin")
-    print("使用记事本打开account.json和setting.json配置后使用")
     user_setting = User_Setting()
-
-    # json_data = json.dumps(accounts, indent=4)
-
-    # with open('account.json','w') as file:
-    #     file.write(json_data)
 
     app = QApplication(sys.argv)
     main_window = MainWindow(user_setting)
-    main_window.show()  # 显示主窗口
+    apply_stylesheet(app, theme='light_red.xml')
+
+    icon = QIcon("furau.ico")
+    main_window.setWindowIcon(icon)
+
+    main_window.show() 
     sys.exit(app.exec_())
 
-#nuitka --mingw64 --standalone --onefile --show-progress --plugin-enable=pyqt5 --windows-icon-from-ico=furau.ico --output-filename=大咪咪多号登录.exe DMM.py
+#nuitka --mingw64 --standalone --onefile --show-progress --windows-disable-console --plugin-enable=pyqt5 --include-package-data=qt_material --windows-icon-from-ico=furau.ico --output-filename=大咪咪多号登录.exe DMM.py
