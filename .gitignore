@@ -1,0 +1,4 @@
+/DMM.build/*
+/DMM.dist/*
+/DMM.onefile-build/*
+*.exe
