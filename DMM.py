@@ -1,12 +1,11 @@
 import sys,os
 from PyQt5.QtWidgets import QApplication, QWidget, QLabel, QLineEdit, QPushButton, QVBoxLayout,QDesktopWidget,QMessageBox,QComboBox,QHBoxLayout
 from PyQt5.QtGui import QIcon
-from PyQt5.QtCore import QCoreApplication
+from PyQt5.QtCore import QThread, pyqtSignal
 import re
 import json
 import requests
 from urllib.parse import quote_plus 
-import functools
 import webbrowser
 from qt_material import apply_stylesheet
 
@@ -64,6 +63,7 @@ class DMMGame:
         response = self.session.get(
             login_url+f'=/path={login_path}',
             allow_redirects=False)
+        print(response)
         json_data = DMMGame.get_login_page_json(response)
         login_data = {
             'token' : json_data['props']['pageProps']['token'],
@@ -71,9 +71,13 @@ class DMMGame:
             'password' : self.password,
             'path' : login_path
         }
+        print(login_data)
         # 登录
         login_success = False
         response = self.session.post(login_url+'authenticate',data=login_data)
+        print(response)
+        with open("st.html","w",encoding='utf8') as f:
+                f.write(response.text)
         if '2段階認証' in response.text:
             response = self.session.get(response.url,allow_redirects=False)
             json_data = self.get_login_page_json(response)
@@ -101,10 +105,7 @@ class DMMGame:
             response = self.session.get(fanza_game_url)
             pattern = r'(//osapi\.dmm\.com/gadgets/ifr[^"]+)'
             match = re.search(pattern, response.text)
-            return 'https:' + match.group(1).replace('amp;', '')
-    
-   
-        
+            return 'https:' + match.group(1).replace('amp;', '') 
     
 class LoginWindow(QWidget):
     def __init__(self):
@@ -172,12 +173,12 @@ class MainWindow(QWidget):
     def initUI(self):
         if self.setting.first:
             QMessageBox.warning(self, '警告',
-                                '''
+'''
 为了你的账号安全，如果不确信该软件的来源是否可靠
         请到github下载源代码自行编译
 https://github.com/Lisanjin/DMM-loginhelper
 使用记事本打开account.json和setting.json配置后使用
-                                '''
+'''
                                 )
             self.setting.updata()
 
@@ -200,8 +201,11 @@ https://github.com/Lisanjin/DMM-loginhelper
         # 创建游戏列表下拉框
         self.game_combo = QComboBox()
         for game_name in self.setting.game_list:
-            self.game_combo.addItem(game_name)
-        
+            if game_name[0] !='':
+                self.game_combo.addItem(game_name[0])
+            else:
+                self.game_combo.addItem(game_name[1])
+
         self.game_combo.setFixedWidth(200)
         left_layout.addWidget(self.game_combo)
 
@@ -211,7 +215,8 @@ https://github.com/Lisanjin/DMM-loginhelper
         self.start_button = QPushButton('启动')
         
 
-        self.start_button.clicked.connect(functools.partial(self.game_start))
+        self.start_button.clicked.connect(self.game_start)
+        
         # 设置按钮的宽度和高度
         self.start_button.setFixedSize(100, 30)
 
@@ -234,6 +239,8 @@ https://github.com/Lisanjin/DMM-loginhelper
     def game_start(self):
         self.start_button.setText('启动中')
         self.start_button.setEnabled(False)
+        self.start_button.update()
+
         # 获取账号下拉框中当前选中项的文本
         current_account = self.account_combo.currentText()  
         current_game = self.game_combo.currentText()
@@ -244,6 +251,8 @@ https://github.com/Lisanjin/DMM-loginhelper
                 password = account['password']
 
         proxies_port = self.setting.proxies_port
+
+        
         DG = DMMGame(current_account, password,proxies_port)
 
         url = DG.fanza_login(current_game)
