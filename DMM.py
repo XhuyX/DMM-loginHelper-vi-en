@@ -1,7 +1,6 @@
 import sys,os
-from PyQt5.QtWidgets import QApplication, QWidget, QLabel, QLineEdit, QPushButton, QVBoxLayout,QDesktopWidget,QMessageBox,QComboBox,QHBoxLayout
+from PyQt5.QtWidgets import QApplication,QWidget,QDialog, QLabel, QLineEdit, QPushButton, QVBoxLayout,QDesktopWidget,QMessageBox,QComboBox,QHBoxLayout
 from PyQt5.QtGui import QIcon
-from PyQt5.QtCore import QThread, pyqtSignal
 import re
 import json
 import requests
@@ -29,6 +28,11 @@ class User_Setting():
 
         with open("setting.json", 'w', encoding='utf8') as user_setting_file:
             json.dump(self.user_setting, user_setting_file, ensure_ascii=False, indent=4)  # 将数据写回文件
+
+    def updata_account(self,account):
+        self.account = account
+        with open("account.json", 'w', encoding='utf8') as account_file:
+            json.dump(self.account, account_file, ensure_ascii=False, indent=4)
 
 
 class DMMGame:
@@ -181,13 +185,18 @@ https://github.com/Lisanjin/DMM-loginhelper
 '''
                                 )
             self.setting.updata()
-
+        
+        
         self.setWindowTitle('神绊！启动！')
         self.setGeometry(100, 100, 450, 200)
+        
 
-        main_layout = QHBoxLayout()
-        left_layout = QVBoxLayout()
-
+        self.main_layout = QHBoxLayout()
+        self.left_layout = QVBoxLayout()
+        self.right_layout = QVBoxLayout()
+        self.right_up_layout = QHBoxLayout()
+        self.right_down_layout = QHBoxLayout()
+        
         # 创建账号列表下拉框
         self.account_combo = QComboBox()
         
@@ -195,8 +204,7 @@ https://github.com/Lisanjin/DMM-loginhelper
             self.account_combo.addItem(account['email'])
 
         self.account_combo.setFixedWidth(200)
-        left_layout.addWidget(self.account_combo)
-        
+          
 
         # 创建游戏列表下拉框
         self.game_combo = QComboBox()
@@ -207,25 +215,43 @@ https://github.com/Lisanjin/DMM-loginhelper
                 self.game_combo.addItem(game_name[1])
 
         self.game_combo.setFixedWidth(200)
-        left_layout.addWidget(self.game_combo)
-
-        main_layout.addLayout(left_layout)
-
         
         self.start_button = QPushButton('启动')
-        
-
         self.start_button.clicked.connect(self.game_start)
-        
-        # 设置按钮的宽度和高度
         self.start_button.setFixedSize(100, 30)
 
-        
-        main_layout.addWidget(self.start_button)
+        self.add_button = QPushButton('添加')
+        self.add_button.clicked.connect(self.add_account)
+        self.add_button.setFixedSize(65, 30)
 
-        self.setLayout(main_layout)
+        self.delete_button = QPushButton('删除')
+        self.delete_button.clicked.connect(self.delete_account)
+        self.delete_button.setFixedSize(65, 30)
+        self.delete_button.setStyleSheet('background-color: gray; color: white;border: 1px solid gray;')
 
+        self.left_layout.addWidget(self.account_combo)
+        self.left_layout.addWidget(self.game_combo)
+
+        self.right_up_layout.addStretch(1)
+        self.right_up_layout.addWidget(self.delete_button)
+        self.right_up_layout.addWidget(self.add_button)
+        self.right_up_layout.addStretch(1)
+
+        self.right_down_layout.addStretch(1)
+        self.right_down_layout.addWidget(self.start_button)
+        self.right_down_layout.addStretch(1)
+
+        self.right_layout.addLayout(self.right_up_layout)
+        self.right_layout.addLayout(self.right_down_layout)
+
+        self.main_layout.addStretch(2)
+        self.main_layout.addLayout(self.left_layout)
+        self.main_layout.addStretch(1)
+        self.main_layout.addLayout(self.right_layout)
+        self.main_layout.addStretch(3)
         
+        
+        self.setLayout(self.main_layout)
 
         # 窗口移动到中间
         screen_geometry = QDesktopWidget().screenGeometry()
@@ -235,6 +261,48 @@ https://github.com/Lisanjin/DMM-loginhelper
 
     def message(self):
         pass
+
+    def add_account(self):
+        dialog = AddWindow(self)
+        result = dialog.exec_()  # 显示对话框
+        if result == QDialog.Accepted:
+            QMessageBox.information(self, 'Success', '添加成功', QMessageBox.Ok)
+            self.left_layout.removeWidget(self.account_combo)
+            self.account_combo.deleteLater()
+            
+            self.account_combo = QComboBox()
+        
+            for account in self.setting.account:
+                self.account_combo.addItem(account['email'])
+
+            self.account_combo.setFixedWidth(200)
+
+            self.left_layout.insertWidget(0, self.account_combo)
+
+
+
+    def delete_account(self):
+        current_account = self.account_combo.currentText()  
+
+        for account in self.setting.account:
+            if account['email'] == current_account:
+                self.setting.account.remove(account)
+        self.updata_account(self.setting.account)
+        QMessageBox.information(self, 'Success', '删除成功', QMessageBox.Ok)
+        self.left_layout.removeWidget(self.account_combo)
+        self.account_combo.deleteLater()
+            
+        self.account_combo = QComboBox()
+        
+        for account in self.setting.account:
+            self.account_combo.addItem(account['email'])
+
+        self.account_combo.setFixedWidth(200)
+
+        self.left_layout.insertWidget(0, self.account_combo)
+
+
+
 
     def game_start(self):
         self.start_button.setText('启动中')
@@ -262,10 +330,51 @@ https://github.com/Lisanjin/DMM-loginhelper
         self.start_button.setText('启动')
         self.start_button.setEnabled(True)
 
+    def updata_account(self,account):
+        self.setting.updata_account(account)
 
+class AddWindow(QDialog):
+    def __init__(self,MainWindow):
+        super().__init__()
+        self.mainwindow = MainWindow
+        self.setWindowTitle('添加账号')
+        self.setGeometry(200, 200, 300, 150)
 
+        screen_geometry = QDesktopWidget().screenGeometry()
+        x = (screen_geometry.width() - self.width()) // 2
+        y = (screen_geometry.height() - self.height()) // 2
+        self.move(x, y)
+        
+        layout = QVBoxLayout()
+        self.email_label = QLabel('Email:')
+        self.email_edit = QLineEdit()
+        layout.addWidget(self.email_label)
+        layout.addWidget(self.email_edit)
+        
+        self.password_label = QLabel('Password:')
+        self.password_edit = QLineEdit()
+        layout.addWidget(self.password_label)
+        layout.addWidget(self.password_edit)
         
 
+        self.add_button = QPushButton('添加')
+        self.add_button.clicked.connect(self.add_account)
+        layout.addWidget(self.add_button)
+        
+        self.setLayout(layout)
+
+    def add_account(self):
+        email_text = self.email_edit.text()
+        password_text = self.password_edit.text()
+        
+        new_data={'email':email_text,"password":password_text}
+        new_account_list = self.mainwindow.setting.account
+        new_account_list.append(new_data)
+        self.mainwindow.updata_account(new_account_list)
+
+        self.accept()
+
+        
 
 if __name__ == '__main__':
     user_setting = User_Setting()

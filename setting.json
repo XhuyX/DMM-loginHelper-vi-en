@@ -1,22 +1,70 @@
 {
-    "首次启动": "否",
+    "首次启动": "是",
     "代理端口": "7890",
     "游戏列表": [
-        ["DeepOne", "deeponer"],
-        ["孤儿的工作", "minashigo_x"],
-        ["神绊的导师", "cravesagax"],
-        ["迷雾列车少女", "MistTrainGirlsX"],
-        ["妖怪大乱斗", "ayarabux"],
-        ["传奇四叶草", "legeclox"],
-        ["", "magicami_dx"],
-        ["香格里拉", "shangri_la_x"],
-        ["闪耀星骑士", "twinklestarknightsx"],
-        ["巨乳幻想", "kyonyufantasyburstx"],
-        ["少女艺术绮谭", "girlscreationr"],
-        ["兵娘", "armsarmouryr"],
-        ["对魔忍RPGX", "taimanin_rpgx"],
-        ["千年战争", "aigis"],
-        ["宝石姬Re", "jeweprirex"],
-        ["超昂大战", "escalationheroines"]
+        [
+            "DeepOne",
+            "deeponer"
+        ],
+        [
+            "孤儿的工作",
+            "minashigo_x"
+        ],
+        [
+            "神绊的导师",
+            "cravesagax"
+        ],
+        [
+            "迷雾列车少女",
+            "MistTrainGirlsX"
+        ],
+        [
+            "妖怪大乱斗",
+            "ayarabux"
+        ],
+        [
+            "传奇四叶草",
+            "legeclox"
+        ],
+        [
+            "",
+            "magicami_dx"
+        ],
+        [
+            "香格里拉",
+            "shangri_la_x"
+        ],
+        [
+            "闪耀星骑士",
+            "twinklestarknightsx"
+        ],
+        [
+            "巨乳幻想",
+            "kyonyufantasyburstx"
+        ],
+        [
+            "少女艺术绮谭",
+            "girlscreationr"
+        ],
+        [
+            "兵娘",
+            "armsarmouryr"
+        ],
+        [
+            "对魔忍RPGX",
+            "taimanin_rpgx"
+        ],
+        [
+            "千年战争",
+            "aigis"
+        ],
+        [
+            "宝石姬Re",
+            "jeweprirex"
+        ],
+        [
+            "超昂大战",
+            "escalationheroines"
+        ]
     ]
 }
