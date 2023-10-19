@@ -67,7 +67,6 @@ class DMMGame:
         response = self.session.get(
             login_url+f'=/path={login_path}',
             allow_redirects=False)
-        print(response)
         json_data = DMMGame.get_login_page_json(response)
         login_data = {
             'token' : json_data['props']['pageProps']['token'],
@@ -75,13 +74,9 @@ class DMMGame:
             'password' : self.password,
             'path' : login_path
         }
-        print(login_data)
         # 登录
         login_success = False
         response = self.session.post(login_url+'authenticate',data=login_data)
-        print(response)
-        with open("st.html","w",encoding='utf8') as f:
-                f.write(response.text)
         if '2段階認証' in response.text:
             response = self.session.get(response.url,allow_redirects=False)
             json_data = self.get_login_page_json(response)
@@ -109,7 +104,7 @@ class DMMGame:
             response = self.session.get(fanza_game_url)
             pattern = r'(//osapi\.dmm\.com/gadgets/ifr[^"]+)'
             match = re.search(pattern, response.text)
-            return 'https:' + match.group(1).replace('amp;', '') 
+            return 'https:' + match.group(1).replace('amp;', '')
     
 class LoginWindow(QWidget):
     def __init__(self):
@@ -305,13 +300,21 @@ https://github.com/Lisanjin/DMM-loginhelper
 
 
     def game_start(self):
+        
         self.start_button.setText('启动中')
         self.start_button.setEnabled(False)
         self.start_button.update()
 
         # 获取账号下拉框中当前选中项的文本
         current_account = self.account_combo.currentText()  
-        current_game = self.game_combo.currentText()
+        current_game_name = self.game_combo.currentText()
+
+        print(current_account)
+        print(current_game_name)
+        
+        for game_name in self.setting.game_list:
+            if game_name[0] == current_game_name:
+                current_game = game_name[1]
         
         password = ''
         for account in self.setting.account:
