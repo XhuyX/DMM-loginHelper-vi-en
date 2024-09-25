@@ -7,8 +7,43 @@ import requests
 from urllib.parse import quote_plus 
 import webbrowser
 from qt_material import apply_stylesheet
+import uncurl
 
+def get_header_from_curl(origin_url):
+    origin_url = origin_url.replace('\\\n', '')
+    context = uncurl.parse_context(origin_url)
+    headers = context.headers
+    return headers
 
+def getST(cookies,proxies):
+        login_curl = '''curl 'https://artemis.games.dmm.co.jp/member/pc/init-game-frame/deeponer' \
+  -H 'accept: application/json, text/plain, */*' \
+  -H 'accept-language: zh-CN,zh;q=0.9' \
+  -H 'cookie: XSRF-TOKEN=eyJpdiI6InY0dkZud2prMzlGQXNseGhvZVwvSlhRPT0iLCJ2YWx1ZSI6ImZEZitRVmQ4RUdpUDA2YnBreUdvVmNBdjRzTzJKdVEzd2Q4Rm9PZjdGWkFTK2poeEd3eGVDZ2JJT2U2QlgyeGlVUGtXVzY3TWlrRmEzZGNFbXFjUmJ3PT0iLCJtYWMiOiJjZTEzNGZlMTY4ZTgxZjM1NmU2MGIwMjA4NWMzZTk5ZWZmYjBkYjMxYjcyNTdmOGU3MjY5ZmQxYzdjMjNlZGMwIn0%3D; rieSh3Ee_ga=GA1.1.1804411059.1726576509; _gcl_au=1.1.215421667.1726576509; _ga=GA1.1.1804411059.1726576509; _yjsu_yjad=1726576510.c93b4c38-7ba3-4504-9c5e-44843181c855; FPID=FPID2.3.bcJyw0UqTykR6nc%2B3K8jAhUb6r18vIgxhzS2bMbUckI%3D.1726576509; FPLC=oN8k%2BMjEpBoL5n8Z92D6R75deJMfas99p4d2dWJqWqP8wsXzbPqwdWzo%2FRTYPc3She46XNyqJlZmKD6XzJPyXYfPVlWn02uU0e9uNzs8dTbi04kjkButtnHF2QV8YA%3D%3D; FPAU=1.1.215421667.1726576509; _cq_duid=1.1726576511.pKTfWbfzd9qX49sw; _cq_suid=1.1726576511.DbhnMA8eSFDcgVzo; _fbp=fb.2.1726576513866.676616280781315737; ckcy=1; age_check_origin=1; mbox=check#true#1726576576|session#1726576515128-479159#1726578376; is_intarnal=true; i3_ab=33c6c491-bcd8-474f-a5d6-e3fb5f1101ae; age_check_done=1; olympus_recently_checked_games=677176; ABTastySession=mrasn=&lp=https%253A%252F%252Fgames.dmm.co.jp%252Fdetail%252Fdeeponer; alcb=true; INT_SESID=A1lRXE9CCQJYQTR6d0cKEF9XAlkQV1UEDABeCQZJBAYHAE9SUFADHABUWAceXQRUAwUGBwtUV1VfFl1CX1EIQDE3IzRgEwhYWFJWAQVQBlVQUANYQVtdCht9KGU6N3cxKydAXVULBAsZEFsACUdkKiFGDxAIUlIKGwIACFMBUVZXTlcDAAUeBVtSWR5SBlMGSAEEAABWBwYBUF5TA0YJEVhaWERZVF5TBxE%2BWldHChBfVQZZECVVAAlfFUcCXQMGEEFZFQ4ECRMGAT5aV0cKEF9VDkEEQ19DAwNcExAXVxA9CgZED0IJAFRZQ2UEAQgZMigAM3wwM2hvQl8TXhcIW1hBAxNAWWxFCw4EEQgMC1JSVgJWBVdRBA4PFQtUVQhABhYSCl1SUkULDA8RCBYLU19GFlhBW1UIAxYPQjoFVAQLDwsHQFRsXhUNBEERXlNZVV9JHg%3D%3D; INT_SESID_SECURE=A1lRXE9CCQJYQTR6d0cKEF9XAlkQV1UEDABeCQZJBAYHAE9SUFADHABUWAceXQRUAwUGBwtUV1VfFl1CX1EIQDE3IzRgEwhYWFJWAQVQBlVQUANYQVtdCht9KGU6N3cxKydAXVULBAsZEFsACUdkKiFGDxAIUlIKGwIACFMBUVZXTlcDAAUeBVtSWR5SBlMGSAEEAABWBwYBUF5TA0YJEVhaWERZVF5TBxE%2BWldHChBfVQZZECVVAAlfFUcCXQMGEEFZFQ4ECRMGAT5aV0cKEF9VDkEEQ19DAwNcExAXVxA9CgZED0IJAFRZQ2UEAQgZMigAM3wwM2hvQl8TXhcIW1hBAxNAWWxFCw4EEQgMC1JSVgJWBVdRBA4PFQtUVQhABhYSCl1SUkULDA8RCBYLU19GFlhBW1UIAxYPQjoFVAQLDwsHQFRsXhUNBEERXlNZVV9JHg%3D%3D; secid=50840c752c631cbecbde481dd2eb1d96; login_secure_id=50840c752c631cbecbde481dd2eb1d96; login_session_id=6f96ec45-5e44-4918-acbe-e0c27c68d8bf; i3_opnd=V7d9zWL4PNQWXVv9; check_done_login=true; subscription_members_status=non; ckcy_remedied_check=ktkrt_argt; olg_translate_language=zh-CHS; cklg=zh-CHS; games_dmm=eyJpdiI6ImNQZ0tpV0Q5ZzU1bWFhTnQ0WkFmQ3c9PSIsInZhbHVlIjoiMTl6TXozQ0NVbUN2WkZoQ0NYTmMzTnhjaEg5dk9RT2ZQUFFpZE5WM3RXSHZrcVVENVBOMFA4bzlcL09MUG5hNFhmTzdiR1oyU0o2dVZLVnhHdXpCeGJRPT0iLCJtYWMiOiI0ZTI1MzZlOWJmZWJiYzA5OGMzZmJlYjIxOWU2OTMwZWUxY2Q4ZWYxMmI3OTkwYWVkYjZmYWQyODA3NDljYTI4In0%3D; rieSh3Ee_ga_KQYE0DE5JW=GS1.1.1726576508.1.1.1726576550.0.0.1325999567; _ga_5FZYXB704N=GS1.1.1726576510.1.1.1726576550.0.0.584882523' \
+  -H 'dnt: 1' \
+  -H 'origin: https://play.games.dmm.co.jp' \
+  -H 'priority: u=1, i' \
+  -H 'referer: https://play.games.dmm.co.jp/' \
+  -H 'sec-ch-ua: "Chromium";v="128", "Not;A=Brand";v="24", "Google Chrome";v="128"' \
+  -H 'sec-ch-ua-mobile: ?0' \
+  -H 'sec-ch-ua-platform: "Windows"' \
+  -H 'sec-fetch-dest: empty' \
+  -H 'sec-fetch-mode: cors' \
+  -H 'sec-fetch-site: same-site' \
+  -H 'user-agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/128.0.0.0 Safari/537.36' \
+  -H 'x-access-from: play'
+  '''
+        headers = get_header_from_curl(login_curl)
+        headers['Cookie'] = cookies
+        url = 'https://artemis.games.dmm.co.jp/member/pc/init-game-frame/deeponer'
+
+        respones = requests.get(
+            url=url, headers=headers, proxies=proxies)
+        if respones.status_code == 200:
+            print('成功获取st')
+            game_frame_url = "https:" + respones.json()["game_frame_url"]
+            return game_frame_url
+            
 
 class User_Setting():
     def __init__(self) -> None:
@@ -58,6 +93,11 @@ class DMMGame:
         self.password = password
     
     def fanza_login(self, target:str) -> str:
+        if target == 'deeponer':
+            cookie = self.fanza_login_get_token(target)
+            url = getST(cookie,proxies=self.session.proxies)
+            return url
+
         # 初始化url
         login_url = 'https://accounts.dmm.co.jp/service/login/password/'
         game_path = f'/play/{target}/'
@@ -101,10 +141,45 @@ class DMMGame:
         
         # 访问游戏网址获取osapi ifr网址
         if login_success:
+            print(fanza_game_url)
             response = self.session.get(fanza_game_url)
+            with open('dmm.html','w',encoding='utf8') as f:
+                f.write(response.text)
+            
             pattern = r'(//osapi\.dmm\.com/gadgets/ifr[^"]+)'
             match = re.search(pattern, response.text)
             return 'https:' + match.group(1).replace('amp;', '')
+    
+    def fanza_login_get_token(self, target:str) -> str:
+        """fanza页游登录获取ifr网址
+        Args: 
+            target (str): 游戏ID
+        Returns:
+            str: osapi ifr 网址
+        """
+        # 初始化url
+        login_url = 'https://accounts.dmm.co.jp/service/login/password/'
+        game_path = f'/play/{target}/'
+        login_path = 'https%3A%2F%2Fpc-play.games.dmm.co.jp'+quote_plus(game_path)
+        fanza_game_url = f'https://pc-play.games.dmm.co.jp/{game_path}'
+        # 获取登录token
+        response = self.session.get(
+            login_url+f'=/path={login_path}',
+            allow_redirects=False)
+        json_data = DMMGame.get_login_page_json(response)
+        login_data = {
+            'token' : json_data['props']['pageProps']['token'],
+            'login_id' : self.login_id,
+            'password' : self.password,
+            'path' : login_path
+        }
+        # 登录
+        login_success = False
+        response = self.session.post(login_url+'authenticate',data=login_data)
+
+        cookies = self.session.cookies
+        cookies_str = '; '.join([f'{name}={value}' for name, value in cookies.items()])
+        return cookies_str
     
 class LoginWindow(QWidget):
     def __init__(self):

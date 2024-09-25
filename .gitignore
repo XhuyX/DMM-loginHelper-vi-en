@@ -3,4 +3,4 @@
 /DMM.onefile-build/*
 *.exe
 *.zip
-account.json
+*.json
