@@ -1,6 +1,8 @@
 {
-    "首次启动": "是",
+    "首次启动": "否",
     "代理端口": "7890",
+    "使用chromium": "是",
+    "chromium路径": "chrome-win/chrome.exe",
     "游戏列表": [
         [
             "DeepOne",
@@ -27,12 +29,12 @@
             "legeclox"
         ],
         [
-            "",
-            "magicami_dx"
+            "童话",
+            "otogi_f_r"
         ],
         [
-            "香格里拉",
-            "shangri_la_x"
+            "转生魔王",
+            "tenshoku_maoux"
         ],
         [
             "闪耀星骑士",

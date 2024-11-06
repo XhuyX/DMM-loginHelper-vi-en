@@ -1,4 +1,4 @@
-import sys,os
+import sys
 from PyQt5.QtWidgets import QApplication,QWidget,QDialog, QLabel, QLineEdit, QPushButton, QVBoxLayout,QDesktopWidget,QMessageBox,QComboBox,QHBoxLayout
 from PyQt5.QtGui import QIcon
 import re
@@ -8,6 +8,22 @@ from urllib.parse import quote_plus
 import webbrowser
 from qt_material import apply_stylesheet
 import uncurl
+import threading
+import subprocess
+
+# def open_browser(url,chromium_path):
+#     user_data_path = chromium_path.replace('chrome.exe','user-data')
+#     os.makedirs(user_data_path, exist_ok=True)
+
+#     playwright = sync_playwright().start()
+#     # browser = playwright.chromium.launch(headless=False, executable_path=chromium_path)
+    
+    
+#     browser = playwright.chromium.launch_persistent_context(headless=False, 
+#                                          executable_path=chromium_path,
+#                                          user_data_dir=user_data_path)
+#     page = browser.new_page()
+#     page.goto(url)
 
 def get_header_from_curl(origin_url):
     origin_url = origin_url.replace('\\\n', '')
@@ -15,12 +31,11 @@ def get_header_from_curl(origin_url):
     headers = context.headers
     return headers
 
-def getST(cookies,proxies):
-        login_curl = '''curl 'https://artemis.games.dmm.co.jp/member/pc/init-game-frame/deeponer' \
+def getST(cookies,proxies,target):
+        login_curl = '''curl 'https://artemis.games.dmm.co.jp/member/pc/init-game-frame/otogi_f_r' \
   -H 'accept: application/json, text/plain, */*' \
   -H 'accept-language: zh-CN,zh;q=0.9' \
-  -H 'cookie: XSRF-TOKEN=eyJpdiI6InY0dkZud2prMzlGQXNseGhvZVwvSlhRPT0iLCJ2YWx1ZSI6ImZEZitRVmQ4RUdpUDA2YnBreUdvVmNBdjRzTzJKdVEzd2Q4Rm9PZjdGWkFTK2poeEd3eGVDZ2JJT2U2QlgyeGlVUGtXVzY3TWlrRmEzZGNFbXFjUmJ3PT0iLCJtYWMiOiJjZTEzNGZlMTY4ZTgxZjM1NmU2MGIwMjA4NWMzZTk5ZWZmYjBkYjMxYjcyNTdmOGU3MjY5ZmQxYzdjMjNlZGMwIn0%3D; rieSh3Ee_ga=GA1.1.1804411059.1726576509; _gcl_au=1.1.215421667.1726576509; _ga=GA1.1.1804411059.1726576509; _yjsu_yjad=1726576510.c93b4c38-7ba3-4504-9c5e-44843181c855; FPID=FPID2.3.bcJyw0UqTykR6nc%2B3K8jAhUb6r18vIgxhzS2bMbUckI%3D.1726576509; FPLC=oN8k%2BMjEpBoL5n8Z92D6R75deJMfas99p4d2dWJqWqP8wsXzbPqwdWzo%2FRTYPc3She46XNyqJlZmKD6XzJPyXYfPVlWn02uU0e9uNzs8dTbi04kjkButtnHF2QV8YA%3D%3D; FPAU=1.1.215421667.1726576509; _cq_duid=1.1726576511.pKTfWbfzd9qX49sw; _cq_suid=1.1726576511.DbhnMA8eSFDcgVzo; _fbp=fb.2.1726576513866.676616280781315737; ckcy=1; age_check_origin=1; mbox=check#true#1726576576|session#1726576515128-479159#1726578376; is_intarnal=true; i3_ab=33c6c491-bcd8-474f-a5d6-e3fb5f1101ae; age_check_done=1; olympus_recently_checked_games=677176; ABTastySession=mrasn=&lp=https%253A%252F%252Fgames.dmm.co.jp%252Fdetail%252Fdeeponer; alcb=true; INT_SESID=A1lRXE9CCQJYQTR6d0cKEF9XAlkQV1UEDABeCQZJBAYHAE9SUFADHABUWAceXQRUAwUGBwtUV1VfFl1CX1EIQDE3IzRgEwhYWFJWAQVQBlVQUANYQVtdCht9KGU6N3cxKydAXVULBAsZEFsACUdkKiFGDxAIUlIKGwIACFMBUVZXTlcDAAUeBVtSWR5SBlMGSAEEAABWBwYBUF5TA0YJEVhaWERZVF5TBxE%2BWldHChBfVQZZECVVAAlfFUcCXQMGEEFZFQ4ECRMGAT5aV0cKEF9VDkEEQ19DAwNcExAXVxA9CgZED0IJAFRZQ2UEAQgZMigAM3wwM2hvQl8TXhcIW1hBAxNAWWxFCw4EEQgMC1JSVgJWBVdRBA4PFQtUVQhABhYSCl1SUkULDA8RCBYLU19GFlhBW1UIAxYPQjoFVAQLDwsHQFRsXhUNBEERXlNZVV9JHg%3D%3D; INT_SESID_SECURE=A1lRXE9CCQJYQTR6d0cKEF9XAlkQV1UEDABeCQZJBAYHAE9SUFADHABUWAceXQRUAwUGBwtUV1VfFl1CX1EIQDE3IzRgEwhYWFJWAQVQBlVQUANYQVtdCht9KGU6N3cxKydAXVULBAsZEFsACUdkKiFGDxAIUlIKGwIACFMBUVZXTlcDAAUeBVtSWR5SBlMGSAEEAABWBwYBUF5TA0YJEVhaWERZVF5TBxE%2BWldHChBfVQZZECVVAAlfFUcCXQMGEEFZFQ4ECRMGAT5aV0cKEF9VDkEEQ19DAwNcExAXVxA9CgZED0IJAFRZQ2UEAQgZMigAM3wwM2hvQl8TXhcIW1hBAxNAWWxFCw4EEQgMC1JSVgJWBVdRBA4PFQtUVQhABhYSCl1SUkULDA8RCBYLU19GFlhBW1UIAxYPQjoFVAQLDwsHQFRsXhUNBEERXlNZVV9JHg%3D%3D; secid=50840c752c631cbecbde481dd2eb1d96; login_secure_id=50840c752c631cbecbde481dd2eb1d96; login_session_id=6f96ec45-5e44-4918-acbe-e0c27c68d8bf; i3_opnd=V7d9zWL4PNQWXVv9; check_done_login=true; subscription_members_status=non; ckcy_remedied_check=ktkrt_argt; olg_translate_language=zh-CHS; cklg=zh-CHS; games_dmm=eyJpdiI6ImNQZ0tpV0Q5ZzU1bWFhTnQ0WkFmQ3c9PSIsInZhbHVlIjoiMTl6TXozQ0NVbUN2WkZoQ0NYTmMzTnhjaEg5dk9RT2ZQUFFpZE5WM3RXSHZrcVVENVBOMFA4bzlcL09MUG5hNFhmTzdiR1oyU0o2dVZLVnhHdXpCeGJRPT0iLCJtYWMiOiI0ZTI1MzZlOWJmZWJiYzA5OGMzZmJlYjIxOWU2OTMwZWUxY2Q4ZWYxMmI3OTkwYWVkYjZmYWQyODA3NDljYTI4In0%3D; rieSh3Ee_ga_KQYE0DE5JW=GS1.1.1726576508.1.1.1726576550.0.0.1325999567; _ga_5FZYXB704N=GS1.1.1726576510.1.1.1726576550.0.0.584882523' \
-  -H 'dnt: 1' \
+  -H 'cookie: _gcl_au=1.1.1967623897.1729778351; _ga=GA1.1.869592530.1729778351; _yjsu_yjad=1729778351.1ddece9f-ead2-4e6e-8de2-f14b07b5acea; FPID=FPID2.3.VewnDTANPZ%2FfJefHWi1dsR%2FiUJ5p7jrJmwKfSvv5oO0%3D.1729778351; FPLC=5ySzE%2Bjar4W2PwtStlyiyGawLl1NRT1mUGU76Xg8DevIVboHMr4MawUAEm6boKyV7eFuJNZRL%2BLDdwJVaEKYqv0bu%2BZga0Ld2fhQHuAVXPi0Snouu4Y8Dyu3Vfrm1Q%3D%3D; FPAU=1.1.1967623897.1729778351; _cq_duid=1.1729778351.lKgdCqJ5HmBBX3wW; _cq_suid=1.1729778351.cULR8hftDXOcYGdH; rieSh3Ee_ga=GA1.1.869592530.1729778351; i3_ab=2ee6b0c9-1e3a-4050-b84c-72017de5b45c; age_check_done=1; olympus_recently_checked_games=643689; is_intarnal=true; _fbp=fb.2.1729778359731.474602866633516004; universe_aid=8b8a1aa0-0698-4246-b477-7fff3151efe4; _im_vid=01JAZD68GNETS8V12E2VZ5FY5E; rtg_bfp=dipfbb.29b712b3bf4a3514; ckcy=1; alcb=true; INT_SESID=A1lRXE9CCQJYQTR6d0cKEF9XAlkQA1wHWgZeAlRJUVNbWk9SVQhVHAAFWFAeUwgFUVVQVgZQVVUAFl1CX1EIQDE3IzRgEwhYWFJWAQpSBltRVwFYQVtdCht9KGU6N3cxKydAXVULBAsZEFsACUdkKiFGDxAIUlIKG1FTAgBVA1RWTldWDQYeBVVRWB5SUQhTSFJSVQYFUgdYUlIIAEYJEVhaWERZVF5TBxE%2BWldHChBfVQZZECVVAAlZFwhSElNWWkFZFQ4ECRMGAT5aV0cKEF9VDkFXQ19DAwNcExAXVxA9CgZED0IJAFRZQ2JJL1wgCgZwBFwrAXhpTAMTXhcIW1hBAxNAWWxFCw4EEQgMC1JSVg1UBVlQAwwPFQtUVQhABhYSCl1SUkULDA8RCBYLU19GFlhBW1UIAxYPQjoFVAQLDwsHQFRsXhUNBEERXlNZVV9JHg%3D%3D; INT_SESID_SECURE=A1lRXE9CCQJYQTR6d0cKEF9XAlkQA1wHWgZeAlRJUVNbWk9SVQhVHAAFWFAeUwgFUVVQVgZQVVUAFl1CX1EIQDE3IzRgEwhYWFJWAQpSBltRVwFYQVtdCht9KGU6N3cxKydAXVULBAsZEFsACUdkKiFGDxAIUlIKG1FTAgBVA1RWTldWDQYeBVVRWB5SUQhTSFJSVQYFUgdYUlIIAEYJEVhaWERZVF5TBxE%2BWldHChBfVQZZECVVAAlZFwhSElNWWkFZFQ4ECRMGAT5aV0cKEF9VDkFXQ19DAwNcExAXVxA9CgZED0IJAFRZQ2JJL1wgCgZwBFwrAXhpTAMTXhcIW1hBAxNAWWxFCw4EEQgMC1JSVg1UBVlQAwwPFQtUVQhABhYSCl1SUkULDA8RCBYLU19GFlhBW1UIAxYPQjoFVAQLDwsHQFRsXhUNBEERXlNZVV9JHg%3D%3D; secid=eebbfb346bca196ea9dc55aec808a127; login_secure_id=eebbfb346bca196ea9dc55aec808a127; login_session_id=e53e1164-5097-4729-a490-6f64d67af49e; i3_opnd=QzJmCobDgnJeHPxe; check_done_login=true; subscription_members_status=non; ckcy_remedied_check=ktkrt_argt; olg_translate_language=zh-CHS; cklg=zh-CHS; games_dmm=eyJpdiI6ImNrK0V3OHNaaW0xK2s1bEE2TVMzRUE9PSIsInZhbHVlIjoid096UlQ0SmNxSFAyRTUyanBXamF6XC92ait3TW9QaDJCNDliMmZZeGYwMEdwcjlNamgrekN0ZGlHMDlhbE9QeWpIb1RESG54QXFIb0kybVlFYldtK2p3PT0iLCJtYWMiOiIxMWRjNGE2ODk5ZmE2NjE2MzRmOTg3YWE5MWMwZTY1NzEyOTgzZWMwZGY2ODgwYWQ4ZjMyYjZkN2FhODgyZTI0In0%3D; rieSh3Ee_ga_KQYE0DE5JW=GS1.1.1729778352.1.1.1729778440.0.0.487007620; _ga_5FZYXB704N=GS1.1.1729778351.1.1.1729778440.0.0.1101730828; _uetsid=25a9e090921011efa49a611d7861143d; _uetvid=25aa05d0921011efb9124f9010698b11; cto_bundle=LnEf6V8lMkZGOEMxc0pXRGMlMkYyVkNZTjY4U0ltT2V6dnFxZzREVWdxeEkxZG1sZDBacnRPeEkwSmo5Zmk5TnFlajZIWEc4JTJGQUZKUVF2RkRIZkhRNjlOcDZCViUyRm1xbWV2dHFScWgzcm5zOEFadFRhSk9qcGVtakE5S3NlaG05ZTM3RUhGclQ0; FPGSID=1.1729778350.1729778440.G-5FZYXB704N.TC-JpWmb9VAgkgmSXDnmng; cdp_id=QzJmCobDgnJeHPxe' \
   -H 'origin: https://play.games.dmm.co.jp' \
   -H 'priority: u=1, i' \
   -H 'referer: https://play.games.dmm.co.jp/' \
@@ -35,10 +50,14 @@ def getST(cookies,proxies):
   '''
         headers = get_header_from_curl(login_curl)
         headers['Cookie'] = cookies
-        url = 'https://artemis.games.dmm.co.jp/member/pc/init-game-frame/deeponer'
+        url = 'https://artemis.games.dmm.co.jp/member/pc/init-game-frame/'+ target
 
-        respones = requests.get(
-            url=url, headers=headers, proxies=proxies)
+        if proxies != None:
+            respones = requests.get(
+                url=url, headers=headers, proxies=proxies)
+        else:
+            respones = requests.get(
+                url=url, headers=headers)
         if respones.status_code == 200:
             print('成功获取st')
             game_frame_url = "https:" + respones.json()["game_frame_url"]
@@ -50,13 +69,21 @@ class User_Setting():
         user_setting_file =  open("setting.json",'r',encoding='utf8') 
         self.user_setting = json.load(user_setting_file)
         user_setting_file.close()
+
         self.proxies_port = self.user_setting['代理端口']
+
         self.game_list = self.user_setting['游戏列表']
+
         self.first = True if self.user_setting.get('首次启动') == '是' else False
+
+        self.use_chromium = True if self.user_setting.get('使用chromium') == '是' else False
+        self.chromium_path = self.user_setting['chromium路径']
 
         account_file =  open("account.json",'r',encoding='utf8')
         self.account = json.load(account_file) 
         account_file.close()
+
+
     
     def updata(self):
         self.user_setting['首次启动'] = '否'  
@@ -84,18 +111,23 @@ class DMMGame:
         if not email or not password: raise ValueError('邮箱和密码不能为空')
         
         self.session = requests.session()
-        self.session.proxies = {
-                    'http': 'http://127.0.0.1:'+proxies_port,
-                    'https': 'http://127.0.0.1:'+proxies_port,
-                }
+        if proxies_port != "":
+            self.session.proxies = {
+                        'http': 'http://127.0.0.1:'+proxies_port,
+                        'https': 'http://127.0.0.1:'+proxies_port,
+                    }
+        else:
+            self.session.proxies = None
 
         self.login_id = email
         self.password = password
     
     def fanza_login(self, target:str) -> str:
-        if target == 'deeponer':
+        if target in ['deeponer','otogi_f_r']:
+            
             cookie = self.fanza_login_get_token(target)
-            url = getST(cookie,proxies=self.session.proxies)
+            print(cookie,self.session.proxies)
+            url = getST(cookie,proxies=self.session.proxies,target=target)
             return url
 
         # 初始化url
@@ -287,7 +319,7 @@ https://github.com/Lisanjin/DMM-loginhelper
         self.game_combo.setFixedWidth(200)
         
         self.start_button = QPushButton('启动')
-        self.start_button.clicked.connect(self.game_start)
+        self.start_button.clicked.connect(self.start_game_thread)
         self.start_button.setFixedSize(100, 30)
 
         self.add_button = QPushButton('添加')
@@ -372,7 +404,9 @@ https://github.com/Lisanjin/DMM-loginhelper
         self.left_layout.insertWidget(0, self.account_combo)
 
 
-
+    def start_game_thread(self):
+        game_thread = threading.Thread(target=self.game_start)
+        game_thread.start()
 
     def game_start(self):
         
@@ -403,7 +437,20 @@ https://github.com/Lisanjin/DMM-loginhelper
 
         url = DG.fanza_login(current_game)
 
-        webbrowser.open(url)
+        print("url:",url)
+
+        if self.setting.use_chromium:
+            chromium_path = self.setting.chromium_path
+            args = [
+                chromium_path,
+                '--new-window',  # 新窗口启动
+                '--start-maximized',  # 最大化窗口启动
+                '--disable-features=CalculateNativeWinOcclusion',  # 关闭离屏渲染
+                url  # 要打开的 URL
+            ]
+            subprocess.Popen(args)
+        else:
+            webbrowser.open(url)
 
         self.start_button.setText('启动')
         self.start_button.setEnabled(True)
@@ -456,6 +503,7 @@ class AddWindow(QDialog):
 
 if __name__ == '__main__':
     user_setting = User_Setting()
+
 
     app = QApplication(sys.argv)
     main_window = MainWindow(user_setting)

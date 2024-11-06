@@ -15,7 +15,14 @@ PC浏览器端“神绊的导师”的游戏地址为，http://pc-play.games.dmm
 > **Warning**  
 > 为了你的账号安全，如果不确信该软件（可执行文件exe）的来源是否可靠  
 请到github下载源代码自行打包  
-https://github.com/Lisanjin/DMM-loginhelper
+https://github.com/Lisanjin/DMM-loginhelper  
 
 
-登录相关的代码来自沖田KENC
+登录相关的代码来自沖田KENC  
+
+`2024.10.12`  
+尝试使用chromium代替默认浏览器启动游戏，以绕过chrome的后台休眠  
+请在这里下载[chromium](https://download-chromium.appspot.com/)解压  
+并将chrome.exe的路径填入到setting.json的"chromiun路径"中(注意使用/代替路径中的\\)  
+如果你需要继续使用你的默认浏览器，请将"使用chromiun"设置为"否"  
+为dmm部分游戏（目前有deepone和otogi，其他暂时不清楚）的st获取api变更添加了处理  
