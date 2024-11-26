@@ -3,5 +3,5 @@
 /DMM.onefile-build/*
 *.exe
 *.zip
-/account.json
 /chrome-win/*
+account.json
