@@ -35,7 +35,7 @@ def getST(cookies,proxies,target):
         login_curl = '''curl 'https://artemis.games.dmm.co.jp/member/pc/init-game-frame/otogi_f_r' \
   -H 'accept: application/json, text/plain, */*' \
   -H 'accept-language: zh-CN,zh;q=0.9' \
-  -H 'cookie: _gcl_au=1.1.1967623897.1729778351; _ga=GA1.1.869592530.1729778351; _yjsu_yjad=1729778351.1ddece9f-ead2-4e6e-8de2-f14b07b5acea; FPID=FPID2.3.VewnDTANPZ%2FfJefHWi1dsR%2FiUJ5p7jrJmwKfSvv5oO0%3D.1729778351; FPLC=5ySzE%2Bjar4W2PwtStlyiyGawLl1NRT1mUGU76Xg8DevIVboHMr4MawUAEm6boKyV7eFuJNZRL%2BLDdwJVaEKYqv0bu%2BZga0Ld2fhQHuAVXPi0Snouu4Y8Dyu3Vfrm1Q%3D%3D; FPAU=1.1.1967623897.1729778351; _cq_duid=1.1729778351.lKgdCqJ5HmBBX3wW; _cq_suid=1.1729778351.cULR8hftDXOcYGdH; rieSh3Ee_ga=GA1.1.869592530.1729778351; i3_ab=2ee6b0c9-1e3a-4050-b84c-72017de5b45c; age_check_done=1; olympus_recently_checked_games=643689; is_intarnal=true; _fbp=fb.2.1729778359731.474602866633516004; universe_aid=8b8a1aa0-0698-4246-b477-7fff3151efe4; _im_vid=01JAZD68GNETS8V12E2VZ5FY5E; rtg_bfp=dipfbb.29b712b3bf4a3514; ckcy=1; alcb=true; INT_SESID=A1lRXE9CCQJYQTR6d0cKEF9XAlkQA1wHWgZeAlRJUVNbWk9SVQhVHAAFWFAeUwgFUVVQVgZQVVUAFl1CX1EIQDE3IzRgEwhYWFJWAQpSBltRVwFYQVtdCht9KGU6N3cxKydAXVULBAsZEFsACUdkKiFGDxAIUlIKG1FTAgBVA1RWTldWDQYeBVVRWB5SUQhTSFJSVQYFUgdYUlIIAEYJEVhaWERZVF5TBxE%2BWldHChBfVQZZECVVAAlZFwhSElNWWkFZFQ4ECRMGAT5aV0cKEF9VDkFXQ19DAwNcExAXVxA9CgZED0IJAFRZQ2JJL1wgCgZwBFwrAXhpTAMTXhcIW1hBAxNAWWxFCw4EEQgMC1JSVg1UBVlQAwwPFQtUVQhABhYSCl1SUkULDA8RCBYLU19GFlhBW1UIAxYPQjoFVAQLDwsHQFRsXhUNBEERXlNZVV9JHg%3D%3D; INT_SESID_SECURE=A1lRXE9CCQJYQTR6d0cKEF9XAlkQA1wHWgZeAlRJUVNbWk9SVQhVHAAFWFAeUwgFUVVQVgZQVVUAFl1CX1EIQDE3IzRgEwhYWFJWAQpSBltRVwFYQVtdCht9KGU6N3cxKydAXVULBAsZEFsACUdkKiFGDxAIUlIKG1FTAgBVA1RWTldWDQYeBVVRWB5SUQhTSFJSVQYFUgdYUlIIAEYJEVhaWERZVF5TBxE%2BWldHChBfVQZZECVVAAlZFwhSElNWWkFZFQ4ECRMGAT5aV0cKEF9VDkFXQ19DAwNcExAXVxA9CgZED0IJAFRZQ2JJL1wgCgZwBFwrAXhpTAMTXhcIW1hBAxNAWWxFCw4EEQgMC1JSVg1UBVlQAwwPFQtUVQhABhYSCl1SUkULDA8RCBYLU19GFlhBW1UIAxYPQjoFVAQLDwsHQFRsXhUNBEERXlNZVV9JHg%3D%3D; secid=eebbfb346bca196ea9dc55aec808a127; login_secure_id=eebbfb346bca196ea9dc55aec808a127; login_session_id=e53e1164-5097-4729-a490-6f64d67af49e; i3_opnd=QzJmCobDgnJeHPxe; check_done_login=true; subscription_members_status=non; ckcy_remedied_check=ktkrt_argt; olg_translate_language=zh-CHS; cklg=zh-CHS; games_dmm=eyJpdiI6ImNrK0V3OHNaaW0xK2s1bEE2TVMzRUE9PSIsInZhbHVlIjoid096UlQ0SmNxSFAyRTUyanBXamF6XC92ait3TW9QaDJCNDliMmZZeGYwMEdwcjlNamgrekN0ZGlHMDlhbE9QeWpIb1RESG54QXFIb0kybVlFYldtK2p3PT0iLCJtYWMiOiIxMWRjNGE2ODk5ZmE2NjE2MzRmOTg3YWE5MWMwZTY1NzEyOTgzZWMwZGY2ODgwYWQ4ZjMyYjZkN2FhODgyZTI0In0%3D; rieSh3Ee_ga_KQYE0DE5JW=GS1.1.1729778352.1.1.1729778440.0.0.487007620; _ga_5FZYXB704N=GS1.1.1729778351.1.1.1729778440.0.0.1101730828; _uetsid=25a9e090921011efa49a611d7861143d; _uetvid=25aa05d0921011efb9124f9010698b11; cto_bundle=LnEf6V8lMkZGOEMxc0pXRGMlMkYyVkNZTjY4U0ltT2V6dnFxZzREVWdxeEkxZG1sZDBacnRPeEkwSmo5Zmk5TnFlajZIWEc4JTJGQUZKUVF2RkRIZkhRNjlOcDZCViUyRm1xbWV2dHFScWgzcm5zOEFadFRhSk9qcGVtakE5S3NlaG05ZTM3RUhGclQ0; FPGSID=1.1729778350.1729778440.G-5FZYXB704N.TC-JpWmb9VAgkgmSXDnmng; cdp_id=QzJmCobDgnJeHPxe' \
+  -H 'cookie: _gcl_au=1.1.1967623' \
   -H 'origin: https://play.games.dmm.co.jp' \
   -H 'priority: u=1, i' \
   -H 'referer: https://play.games.dmm.co.jp/' \
@@ -78,6 +78,8 @@ class User_Setting():
 
         self.use_chromium = True if self.user_setting.get('使用chromium') == '是' else False
         self.chromium_path = self.user_setting['chromium路径']
+
+        self.artemis_api = self.user_setting['artemis_api']
 
         account_file =  open("account.json",'r',encoding='utf8')
         self.account = json.load(account_file) 
@@ -123,12 +125,7 @@ class DMMGame:
         self.password = password
     
     def fanza_login(self, target:str) -> str:
-        if target in ['deeponer','otogi_f_r']:
-            
-            cookie = self.fanza_login_get_token(target)
-            print(cookie,self.session.proxies)
-            url = getST(cookie,proxies=self.session.proxies,target=target)
-            return url
+
 
         # 初始化url
         login_url = 'https://accounts.dmm.co.jp/service/login/password/'
@@ -175,8 +172,8 @@ class DMMGame:
         if login_success:
             print(fanza_game_url)
             response = self.session.get(fanza_game_url)
-            with open('dmm.html','w',encoding='utf8') as f:
-                f.write(response.text)
+            # with open('dmm.html','w',encoding='utf8') as f:
+            #     f.write(response.text)
             
             pattern = r'(//osapi\.dmm\.com/gadgets/ifr[^"]+)'
             match = re.search(pattern, response.text)
@@ -432,25 +429,36 @@ https://github.com/Lisanjin/DMM-loginhelper
 
         proxies_port = self.setting.proxies_port
 
-        
-        DG = DMMGame(current_account, password,proxies_port)
+        try:
+            DG = DMMGame(current_account, password,proxies_port)
 
-        url = DG.fanza_login(current_game)
+            if current_game in self.setting.artemis_api:
+                cookie = DG.fanza_login_get_token(current_game)
+                print(cookie)
+                url = getST(cookie,proxies={
+                            'http': 'http://127.0.0.1:'+proxies_port,
+                            'https': 'http://127.0.0.1:'+proxies_port,
+                        },target=current_game)
+            else:
+                url = DG.fanza_login(current_game)
 
-        print("url:",url)
+            print("url:",url)
 
-        if self.setting.use_chromium:
-            chromium_path = self.setting.chromium_path
-            args = [
-                chromium_path,
-                '--new-window',  # 新窗口启动
-                '--start-maximized',  # 最大化窗口启动
-                '--disable-features=CalculateNativeWinOcclusion',  # 关闭离屏渲染
-                url  # 要打开的 URL
-            ]
-            subprocess.Popen(args)
-        else:
-            webbrowser.open(url)
+            if self.setting.use_chromium:
+                chromium_path = self.setting.chromium_path
+                args = [
+                    chromium_path,
+                    '--new-window',  # 新窗口启动
+                    '--start-maximized',  # 最大化窗口启动
+                    '--disable-features=CalculateNativeWinOcclusion',  # 关闭离屏渲染
+                    url  # 要打开的 URL
+                ]
+                subprocess.Popen(args)
+            else:
+                webbrowser.open(url)
+
+        except Exception as e:
+            print(e)
 
         self.start_button.setText('启动')
         self.start_button.setEnabled(True)

@@ -26,3 +26,7 @@ https://github.com/Lisanjin/DMM-loginhelper
 并将chrome.exe的路径填入到setting.json的"chromiun路径"中(注意使用/代替路径中的\\)  
 如果你需要继续使用你的默认浏览器，请将"使用chromiun"设置为"否"  
 为dmm部分游戏（目前有deepone和otogi，其他暂时不清楚）的st获取api变更添加了处理  
+
+`2024.12.11` 
+新游戏angelica aster也用了artemis这个api获取st，估计以后会越来越多，在设置里添加了对使用artemis api游戏的处理
+目前我已知的就的deepone、童话、angelica这三款，如果还有其他的，请自行添加到setting的artemis_api列表

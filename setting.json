@@ -3,6 +3,7 @@
     "代理端口": "7890",
     "使用chromium": "是",
     "chromium路径": "chrome-win/chrome.exe",
+    "artemis_api":["deeponer","otogi_f_r","angelica_r"],
     "游戏列表": [
         [
             "DeepOne",
@@ -49,8 +50,8 @@
             "girlscreationr"
         ],
         [
-            "兵娘",
-            "armsarmouryr"
+            "angelica aster",
+            "angelica_r"
         ],
         [
             "对魔忍RPGX",
