@@ -4,7 +4,7 @@ from PyQt5.QtGui import QIcon
 import re
 import json
 import requests
-from urllib.parse import quote_plus 
+from urllib.parse import quote_plus
 import webbrowser
 from qt_material import apply_stylesheet
 import uncurl
@@ -17,9 +17,9 @@ import subprocess
 
 #     playwright = sync_playwright().start()
 #     # browser = playwright.chromium.launch(headless=False, executable_path=chromium_path)
-    
-    
-#     browser = playwright.chromium.launch_persistent_context(headless=False, 
+
+
+#     browser = playwright.chromium.launch_persistent_context(headless=False,
 #                                          executable_path=chromium_path,
 #                                          user_data_dir=user_data_path)
 #     page = browser.new_page()
@@ -52,7 +52,7 @@ def getST(cookies,proxies,target):
         headers['Cookie'] = cookies
         url = 'https://artemis.games.dmm.co.jp/member/pc/init-game-frame/'+ target
 
-        if proxies != None:
+        if proxies != None and proxies != {}:
             respones = requests.get(
                 url=url, headers=headers, proxies=proxies)
         else:
@@ -62,11 +62,11 @@ def getST(cookies,proxies,target):
             print('成功获取st')
             game_frame_url = "https:" + respones.json()["game_frame_url"]
             return game_frame_url
-            
+
 
 class User_Setting():
     def __init__(self) -> None:
-        user_setting_file =  open("setting.json",'r',encoding='utf8') 
+        user_setting_file =  open("setting.json",'r',encoding='utf8')
         self.user_setting = json.load(user_setting_file)
         user_setting_file.close()
 
@@ -82,13 +82,13 @@ class User_Setting():
         self.artemis_api = self.user_setting['artemis_api']
 
         account_file =  open("account.json",'r',encoding='utf8')
-        self.account = json.load(account_file) 
+        self.account = json.load(account_file)
         account_file.close()
 
 
-    
+
     def updata(self):
-        self.user_setting['首次启动'] = '否'  
+        self.user_setting['首次启动'] = '否'
 
         with open("setting.json", 'w', encoding='utf8') as user_setting_file:
             json.dump(self.user_setting, user_setting_file, ensure_ascii=False, indent=4)  # 将数据写回文件
@@ -100,7 +100,7 @@ class User_Setting():
 
 
 class DMMGame:
-    
+
     @staticmethod
     def get_login_page_json(response:requests.Response) -> json:
         html_text = response.text
@@ -111,9 +111,9 @@ class DMMGame:
     def __init__(self,email:str,password:str,proxies_port) -> None:
         self.login_status_code = ''
         if not email or not password: raise ValueError('邮箱和密码不能为空')
-        
+
         self.session = requests.session()
-        if proxies_port != "":
+        if proxies_port != "" and proxies_port != "":
             self.session.proxies = {
                         'http': 'http://127.0.0.1:'+proxies_port,
                         'https': 'http://127.0.0.1:'+proxies_port,
@@ -123,7 +123,7 @@ class DMMGame:
 
         self.login_id = email
         self.password = password
-    
+
     def fanza_login(self, target:str) -> str:
 
 
@@ -167,21 +167,21 @@ class DMMGame:
             return json_data['props']['pageProps']['error'][0]
         else:
             login_success = True
-        
+
         # 访问游戏网址获取osapi ifr网址
         if login_success:
             print(fanza_game_url)
             response = self.session.get(fanza_game_url)
             # with open('dmm.html','w',encoding='utf8') as f:
             #     f.write(response.text)
-            
+
             pattern = r'(//osapi\.dmm\.com/gadgets/ifr[^"]+)'
             match = re.search(pattern, response.text)
             return 'https:' + match.group(1).replace('amp;', '')
-    
+
     def fanza_login_get_token(self, target:str) -> str:
         """fanza页游登录获取ifr网址
-        Args: 
+        Args:
             target (str): 游戏ID
         Returns:
             str: osapi ifr 网址
@@ -209,7 +209,7 @@ class DMMGame:
         cookies = self.session.cookies
         cookies_str = '; '.join([f'{name}={value}' for name, value in cookies.items()])
         return cookies_str
-    
+
 class LoginWindow(QWidget):
     def __init__(self):
         super().__init__()
@@ -254,8 +254,8 @@ class LoginWindow(QWidget):
 
         self.showMessage("账号添加成功",email)
         self.showWelcomeWindow(email)
-       
-        
+
+
     def showMessage(self, title, message):
         QMessageBox.information(self,message, title,QMessageBox.Ok)
 
@@ -271,7 +271,7 @@ class MainWindow(QWidget):
         super().__init__()
         self.setting=setting
         self.initUI()
-        
+
 
     def initUI(self):
         if self.setting.first:
@@ -284,26 +284,26 @@ https://github.com/Lisanjin/DMM-loginhelper
 '''
                                 )
             self.setting.updata()
-        
-        
+
+
         self.setWindowTitle('神绊！启动！')
         self.setGeometry(100, 100, 450, 200)
-        
+
 
         self.main_layout = QHBoxLayout()
         self.left_layout = QVBoxLayout()
         self.right_layout = QVBoxLayout()
         self.right_up_layout = QHBoxLayout()
         self.right_down_layout = QHBoxLayout()
-        
+
         # 创建账号列表下拉框
         self.account_combo = QComboBox()
-        
+
         for account in self.setting.account:
             self.account_combo.addItem(account['email'])
 
         self.account_combo.setFixedWidth(200)
-          
+
 
         # 创建游戏列表下拉框
         self.game_combo = QComboBox()
@@ -314,7 +314,7 @@ https://github.com/Lisanjin/DMM-loginhelper
                 self.game_combo.addItem(game_name[1])
 
         self.game_combo.setFixedWidth(200)
-        
+
         self.start_button = QPushButton('启动')
         self.start_button.clicked.connect(self.start_game_thread)
         self.start_button.setFixedSize(100, 30)
@@ -348,8 +348,8 @@ https://github.com/Lisanjin/DMM-loginhelper
         self.main_layout.addStretch(1)
         self.main_layout.addLayout(self.right_layout)
         self.main_layout.addStretch(3)
-        
-        
+
+
         self.setLayout(self.main_layout)
 
         # 窗口移动到中间
@@ -368,9 +368,9 @@ https://github.com/Lisanjin/DMM-loginhelper
             QMessageBox.information(self, 'Success', '添加成功', QMessageBox.Ok)
             self.left_layout.removeWidget(self.account_combo)
             self.account_combo.deleteLater()
-            
+
             self.account_combo = QComboBox()
-        
+
             for account in self.setting.account:
                 self.account_combo.addItem(account['email'])
 
@@ -381,7 +381,7 @@ https://github.com/Lisanjin/DMM-loginhelper
 
 
     def delete_account(self):
-        current_account = self.account_combo.currentText()  
+        current_account = self.account_combo.currentText()
 
         for account in self.setting.account:
             if account['email'] == current_account:
@@ -390,9 +390,9 @@ https://github.com/Lisanjin/DMM-loginhelper
         QMessageBox.information(self, 'Success', '删除成功', QMessageBox.Ok)
         self.left_layout.removeWidget(self.account_combo)
         self.account_combo.deleteLater()
-            
+
         self.account_combo = QComboBox()
-        
+
         for account in self.setting.account:
             self.account_combo.addItem(account['email'])
 
@@ -406,22 +406,22 @@ https://github.com/Lisanjin/DMM-loginhelper
         game_thread.start()
 
     def game_start(self):
-        
+
         self.start_button.setText('启动中')
         self.start_button.setEnabled(False)
         self.start_button.update()
 
         # 获取账号下拉框中当前选中项的文本
-        current_account = self.account_combo.currentText()  
+        current_account = self.account_combo.currentText()
         current_game_name = self.game_combo.currentText()
 
         print(current_account)
         print(current_game_name)
-        
+
         for game_name in self.setting.game_list:
             if game_name[0] == current_game_name:
                 current_game = game_name[1]
-        
+
         password = ''
         for account in self.setting.account:
             if account['email'] == current_account:
@@ -435,10 +435,17 @@ https://github.com/Lisanjin/DMM-loginhelper
             if current_game in self.setting.artemis_api:
                 cookie = DG.fanza_login_get_token(current_game)
                 print(cookie)
-                url = getST(cookie,proxies={
-                            'http': 'http://127.0.0.1:'+proxies_port,
-                            'https': 'http://127.0.0.1:'+proxies_port,
-                        },target=current_game)
+
+                # Chỉ truyền proxy nếu proxies_port không rỗng
+                if self.setting.proxies_port and self.setting.proxies_port != "":
+                    proxies = {
+                        'http': 'http://127.0.0.1:' + self.setting.proxies_port,
+                        'https': 'http://127.0.0.1:' + self.setting.proxies_port,
+                    }
+                else:
+                    proxies = None
+
+                url = getST(cookie, proxies, target=current_game)
             else:
                 url = DG.fanza_login(current_game)
 
@@ -477,29 +484,29 @@ class AddWindow(QDialog):
         x = (screen_geometry.width() - self.width()) // 2
         y = (screen_geometry.height() - self.height()) // 2
         self.move(x, y)
-        
+
         layout = QVBoxLayout()
         self.email_label = QLabel('Email:')
         self.email_edit = QLineEdit()
         layout.addWidget(self.email_label)
         layout.addWidget(self.email_edit)
-        
+
         self.password_label = QLabel('Password:')
         self.password_edit = QLineEdit()
         layout.addWidget(self.password_label)
         layout.addWidget(self.password_edit)
-        
+
 
         self.add_button = QPushButton('添加')
         self.add_button.clicked.connect(self.add_account)
         layout.addWidget(self.add_button)
-        
+
         self.setLayout(layout)
 
     def add_account(self):
         email_text = self.email_edit.text()
         password_text = self.password_edit.text()
-        
+
         new_data={'email':email_text,"password":password_text}
         new_account_list = self.mainwindow.setting.account
         new_account_list.append(new_data)
@@ -507,7 +514,7 @@ class AddWindow(QDialog):
 
         self.accept()
 
-        
+
 
 if __name__ == '__main__':
     user_setting = User_Setting()
@@ -520,7 +527,7 @@ if __name__ == '__main__':
     icon = QIcon("furau.ico")
     main_window.setWindowIcon(icon)
 
-    main_window.show() 
+    main_window.show()
     sys.exit(app.exec_())
 
 #nuitka --mingw64 --standalone --onefile --show-progress --windows-disable-console --plugin-enable=pyqt5 --include-package-data=qt_material --windows-icon-from-ico=furau.ico --output-filename=大咪咪多号登录.exe DMM.py
