@@ -1,6 +1,6 @@
 {
     "首次启动": "否",
-    "代理端口": "7890",
+    "代理端口": "",
     "使用chromium": "是",
     "chromium路径": "chrome-win/chrome.exe",
     "artemis_api":["deeponer","otogi_f_r","angelica_r"],
@@ -70,4 +70,5 @@
             "escalationheroines"
         ]
     ]
+
 }
