@@ -216,7 +216,7 @@ class LoginWindow(QWidget):
         self.initUI()
 
     def initUI(self):
-        self.setWindowTitle('添加账号')
+        self.setWindowTitle('Thêm tài khoản')
         self.setGeometry(100, 100, 300, 150)
 
         layout = QVBoxLayout()
@@ -252,7 +252,7 @@ class LoginWindow(QWidget):
         email = self.email_input.text()
         password = self.password_input.text()
 
-        self.showMessage("账号添加成功",email)
+        self.showMessage("Thêm tài khoản",email)
         self.showWelcomeWindow(email)
 
 
@@ -277,16 +277,15 @@ class MainWindow(QWidget):
         if self.setting.first:
             QMessageBox.warning(self, '警告',
 '''
-为了你的账号安全，如果不确信该软件的来源是否可靠
-        请到github下载源代码自行编译
+link mã nguồn gốc
 https://github.com/Lisanjin/DMM-loginhelper
-使用记事本打开account.json和setting.json配置后使用
+chỉ cần thay nội dung ở phần account.json  và setting.json 
 '''
                                 )
             self.setting.updata()
 
 
-        self.setWindowTitle('神绊！启动！')
+        self.setWindowTitle('Mong sao code chạy được')
         self.setGeometry(100, 100, 450, 200)
 
 
@@ -315,17 +314,17 @@ https://github.com/Lisanjin/DMM-loginhelper
 
         self.game_combo.setFixedWidth(200)
 
-        self.start_button = QPushButton('启动')
+        self.start_button = QPushButton('Khởi động')
         self.start_button.clicked.connect(self.start_game_thread)
-        self.start_button.setFixedSize(100, 30)
+        self.start_button.setFixedSize(130, 30)
 
-        self.add_button = QPushButton('添加')
+        self.add_button = QPushButton('Thêm tài khoản' )
         self.add_button.clicked.connect(self.add_account)
-        self.add_button.setFixedSize(65, 30)
+        self.add_button.setFixedSize(130, 30)
 
-        self.delete_button = QPushButton('删除')
+        self.delete_button = QPushButton('Xoá tài khoản')
         self.delete_button.clicked.connect(self.delete_account)
-        self.delete_button.setFixedSize(65, 30)
+        self.delete_button.setFixedSize(130, 30)
         self.delete_button.setStyleSheet('background-color: gray; color: white;border: 1px solid gray;')
 
         self.left_layout.addWidget(self.account_combo)
@@ -365,7 +364,7 @@ https://github.com/Lisanjin/DMM-loginhelper
         dialog = AddWindow(self)
         result = dialog.exec_()  # 显示对话框
         if result == QDialog.Accepted:
-            QMessageBox.information(self, 'Success', '添加成功', QMessageBox.Ok)
+            QMessageBox.information(self, 'Success', 'Đã thêm tài khoản', QMessageBox.Ok)
             self.left_layout.removeWidget(self.account_combo)
             self.account_combo.deleteLater()
 
@@ -387,7 +386,7 @@ https://github.com/Lisanjin/DMM-loginhelper
             if account['email'] == current_account:
                 self.setting.account.remove(account)
         self.updata_account(self.setting.account)
-        QMessageBox.information(self, 'Success', '删除成功', QMessageBox.Ok)
+        QMessageBox.information(self, 'Success', 'Đã xoá tài khoản', QMessageBox.Ok)
         self.left_layout.removeWidget(self.account_combo)
         self.account_combo.deleteLater()
 
@@ -432,22 +431,20 @@ https://github.com/Lisanjin/DMM-loginhelper
         try:
             DG = DMMGame(current_account, password,proxies_port)
 
-            if current_game in self.setting.artemis_api:
-                cookie = DG.fanza_login_get_token(current_game)
-                print(cookie)
+
+            cookie = DG.fanza_login_get_token(current_game)
+            print(cookie)
 
                 # Chỉ truyền proxy nếu proxies_port không rỗng
-                if self.setting.proxies_port and self.setting.proxies_port != "":
-                    proxies = {
-                        'http': 'http://127.0.0.1:' + self.setting.proxies_port,
-                        'https': 'http://127.0.0.1:' + self.setting.proxies_port,
-                    }
-                else:
-                    proxies = None
-
-                url = getST(cookie, proxies, target=current_game)
+            if self.setting.proxies_port and self.setting.proxies_port != "":
+                proxies = {
+                    'http': 'http://127.0.0.1:' + self.setting.proxies_port,
+                    'https': 'http://127.0.0.1:' + self.setting.proxies_port,
+                }
             else:
-                url = DG.fanza_login(current_game)
+                proxies = None
+
+            url = getST(cookie, proxies, target=current_game)
 
             print("url:",url)
 
@@ -497,7 +494,7 @@ class AddWindow(QDialog):
         layout.addWidget(self.password_edit)
 
 
-        self.add_button = QPushButton('添加')
+        self.add_button = QPushButton('Thêm tài khoản')
         self.add_button.clicked.connect(self.add_account)
         layout.addWidget(self.add_button)
 
