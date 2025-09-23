@@ -1,59 +1,45 @@
 @echo off
 chcp 65001 >nul
-title Cài đặt dependencies tự động
+title Run DMM Application
 color 0A
 
 echo ===============================================
-echo    CÀI ĐẶT TỰ ĐỘNG THƯ VIỆN PYTHON
+echo    RUNNING DMM APPLICATION
 echo ===============================================
 echo.
 
-:: Kiểm tra xem Python đã được cài đặt chưa
+:: Check if Python is installed
 python --version >nul 2>&1
 if errorlevel 1 (
-    echo [LỖI] Python không được tìm thấy!
-    echo Vui lòng cài đặt Python từ: https://python.org
+    echo [ERROR] Python not found!
+    echo Please install Python from: https://python.org
     echo.
     pause
     exit /b 1
 )
 
-:: Kiểm tra xem pip có tồn tại không
-python -m pip --version >nul 2>&1
-if errorlevel 1 (
-    echo [LỖI] pip không được cài đặt!
-    echo Vui lòng cài đặt pip cho Python.
+:: Check if DMM.py exists
+if not exist "DMM.py" (
+    echo [ERROR] DMM.py file not found!
+    echo Make sure DMM.py is in the same folder as this batch file.
     echo.
     pause
     exit /b 1
 )
 
-:: Kiểm tra file requirements.txt
-if not exist "requirements.txt" (
-    echo [LỖI] Không tìm thấy file requirements.txt!
-    echo Đảm bảo file requirements.txt ở cùng thư mục với file batch.
-    echo.
-    pause
-    exit /b 1
-)
-
-echo [THÔNG TIN] Đang kiểm tra phiên bản Python...
+echo [INFO] Checking Python version...
 python --version
 echo.
 
-echo [THÔNG TIN] Đang kiểm tra phiên bản pip...
-python -m pip --version
+echo [INFO] Starting DMM application...
 echo.
 
-echo [THỰC THI] Đang cài đặt các thư viện từ requirements.txt...
-echo.
-
-:: Cài đặt các dependencies
-python -m pip install -r requirements.txt
+:: Run the Python application
+python DMM.py
 
 if errorlevel 1 (
     echo.
-    echo [LỖI] Cài đặt thất bại! Vui lòng kiểm tra kết nối internet.
+    echo [ERROR] DMM application exited with an error.
     echo.
     pause
     exit /b 1
@@ -61,10 +47,7 @@ if errorlevel 1 (
 
 echo.
 echo ===============================================
-echo    CÀI ĐẶT THÀNH CÔNG!
+echo    APPLICATION CLOSED.
 echo ===============================================
-echo.
-echo Các thư viện đã được cài đặt thành công.
-echo Bạn có thể chạy chương trình Python của mình.
 echo.
 pause
