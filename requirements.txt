@@ -1,0 +1,4 @@
+PyQt5>=5.15.2
+requests>=2.32.5
+qt_material>=2.14
+uncurl>=0.0.4
