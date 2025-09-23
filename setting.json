@@ -1,52 +1,57 @@
 {
-    "首次启动": "否",
+    "首次启动": "",
     "代理端口": "",
-    "使用chromium": "是",
+    "使用chromium": "",
     "chromium路径": "chrome-win/chrome.exe",
-    "artemis_api":["deeponer","otogi_f_r","angelica_r"],
+    "artemis_api":["deeponer","otogi_f_r","angelica_r","tenshoku_maoux","minashigo_x","lilyange","crimson_youmataisen_x"],
     "游戏列表": [
+
+        [
+            "lilyange",
+            "lilyange"
+        ],
         [
             "DeepOne",
             "deeponer"
         ],
         [
-            "孤儿的工作",
+            "minashigo_x",
             "minashigo_x"
         ],
         [
-            "神绊的导师",
+            "cravesagax",
             "cravesagax"
         ],
         [
-            "迷雾列车少女",
-            "MistTrainGirlsX"
+            "crimson_youmataisen_x",
+            "crimson_youmataisen_x"
         ],
         [
-            "妖怪大乱斗",
+            "ayarabux",
             "ayarabux"
         ],
         [
-            "传奇四叶草",
+            "legeclox",
             "legeclox"
         ],
         [
-            "童话",
+            "otogi_f_r",
             "otogi_f_r"
         ],
         [
-            "转生魔王",
+            "tenshoku_maoux",
             "tenshoku_maoux"
         ],
         [
-            "闪耀星骑士",
+            "twinklestarknightsx",
             "twinklestarknightsx"
         ],
         [
-            "巨乳幻想",
+            "kyonyufantasyburstx",
             "kyonyufantasyburstx"
         ],
         [
-            "少女艺术绮谭",
+            "girlscreationr",
             "girlscreationr"
         ],
         [
@@ -54,21 +59,22 @@
             "angelica_r"
         ],
         [
-            "对魔忍RPGX",
+            "taimanin_rpgx",
             "taimanin_rpgx"
         ],
         [
-            "千年战争",
+            "aigis",
             "aigis"
         ],
         [
-            "宝石姬Re",
+            "jeweprirex",
             "jeweprirex"
         ],
         [
-            "超昂大战",
+            "escalationheroines",
             "escalationheroines"
         ]
-    ]
 
+        
+    ]
 }
