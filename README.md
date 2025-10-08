@@ -3,7 +3,7 @@
 
 > **Warning**  
 > Repository gốc: https://github.com/Lisanjin/DMM-loginhelper
->  Lưu ý: Bạn cần phải có tài khoản trong game đó mới có thể đăng nhập được (không phải lần đầu đăng nhập game).
+> Lưu ý: Bạn cần phải có tài khoản trong game đó mới có thể đăng nhập được (không phải lần đầu đăng nhập game).
 > Nếu là lần đầu đăng nhập game thì sẽ thông báo lỗi và bạn cần phải đăng nhập vào game đó để tạo tài khoản thủ công.
 
 ## Cách cài đặt
